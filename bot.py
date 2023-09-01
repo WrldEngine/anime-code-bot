@@ -27,6 +27,9 @@ async def start(message):
 	telegram_id = message.from_user.id
 	username = message.from_user.username
 
+	if not username:
+	    username = message.from_user.full_name
+
 	info = f'Здравствуйте, <b>{message.from_user.first_name}</b>'
 
 	user = Users.get_or_none(Users.telegram_id == telegram_id)
@@ -109,6 +112,8 @@ async def post_ads(message, state):
 
 	for user in Users.select():
 		await bot.send_photo(user.telegram_id, photo=photo_id, caption=caption)
+
+	await state.finish()
 
 @dp.message_handler(state=SetCodeForm.name)
 async def set_code_name(message, state):
